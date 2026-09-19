@@ -1,51 +1,87 @@
+# Food Fun: Food Trivia & Facts
 
+A full-stack web app for food trivia, random dishes and fun facts, with user accounts.
+A React front end talks to an Express REST API backed by PostgreSQL, with JWT authentication.
 
+**[Live demo](https://capstone-2-lemon-alpha.vercel.app)** · The API runs on a free tier, so the first request can take up to a minute to wake up.
 
-# Food Trivia & Facts App
-
-## Overview
-An interactive web application offering food trivia, facts, and images. The app now supports user authentication and CRUD operations for managing quizzes and user accounts.
+![The quiz page after answering correctly](docs/screenshot-trivia.jpg)
 
 ## Features
-- Food Trivia Quiz with multiple-choice questions.
-- Random Food Facts and Food Images.
-- User authentication (registration, login, logout).
-- Admin features for managing quizzes (add, update, delete).
 
-## Technologies
-- Frontend: React, CSS
-- Backend: Node.js, Express.js
-- Database: MongoDB/PostgreSQL/MySQL
-- APIs: Eaxeli (Trivia), Foodish (Images)
-- Deployment: Vercel (Frontend), Heroku/Render (Backend)
+- **Trivia quiz:** multiple-choice food questions served from the database, shuffled so every question is asked once before any repeats. Answers show correct/wrong feedback and a running score.
+- **Food images:** a random dish photo and name from [TheMealDB](https://www.themealdb.com/api.php).
+- **Fun facts:** a random food fact with an "Another fact" button.
+- **Accounts:** sign up, log in and view a profile with your display name. Passwords are hashed with bcrypt and sessions use JWTs.
+- **Quiz API:** signed-in users can add, update and delete questions through the REST API.
+- **Responsive UI:** works on phones, supports light and dark mode, and has loading and error states.
 
-## Deployment
-- [Live Application Link](https://capstone-2-git-dev-cavon-rs-projects.vercel.app)     <!-- INSERT DEPLOYMENT LINK -->
-- [Backend API Documentation](http://localhost:5000/) <!-- INSERT BACKEND LINK -->
+![The home page](docs/screenshot-home.jpg)
 
-## Instructions to Run Locally
-1. Clone the repository.
-2. Install dependencies with `npm install` (both frontend and backend).
-3. Configure environment variables:
-   - Backend: `.env` file with database and JWT configurations.
-   - Frontend: `.env` file with API base URL.
-4. Run the backend with `npm start` and the frontend with `npm start`.
+## Tech stack
 
+| Layer | Tools |
+| --- | --- |
+| Front end | React 18, React Router, Axios, plain CSS (custom properties) |
+| Back end | Node.js, Express, `pg`, bcryptjs, jsonwebtoken, winston |
+| Database | PostgreSQL |
+| Hosting | Vercel (front end), Render (API), Neon (database) |
 
-We have broken down the Capstone Project into easy-to-follow steps. Each step of the capstone contains a link with instructions for that step. You may notice this secondCapstone follows a similar pattern to your first Capstone, however, there are key differences. 
+```
+Browser ── React app (Vercel) ──► Express API (Render) ──► PostgreSQL (Neon)
+                     └──► TheMealDB (dish photos)
+```
 
-## Overview
-For your second Capstone Project, you’ll build a more complex database-driven website. Most students will choose to develop this app in React and Node, however, Flask/Python is also an option if you tackle a difficult idea. This website will be powered either off of an external API or an API that you build yourself. Your finished capstone will be an integral part of your portfolio; it will demonstrate to potential employers everything you’ve learned from this course.We want you to work on a challenging project that will incorporate all of the full-stack skills you’ve been developing. The goal of this project isn’t to create something that’s never been done before but should be more ambitious than your last capstone. You could potentially create a website similar to one that already exists, but this time, perhaps add a feature that you wish the website had.We do encourage you to be creative when building your site. You’re free to choose any API you’d like to use or build your own. We encourage you to tap into your imagination throughout the project.
+## Run it locally
 
-## Examples
-You already know about the wealth of APIs available online. Perhaps on this capstone, you can work on one of your ideas that was a bit too complicated for the last project.We also encourage you to create your own API if you cannot find one with the data you are looking for. You can do this through web scraping, importing a CSV, or loading your own data into the API.
+You need Node.js 20+ and a PostgreSQL database (a free [Neon](https://neon.tech) project works).
 
-Let’s give you an example of what a site could look like. Say you want to make a website or mobile app that was like Facebook for dogs - something that would allow pet owners to connect with other pets in their neighborhood. First, you could load information into the application about various breeds of dogs, which would populate drop down lists and allow users to sort for the kind of dog they would like to sit. This will help users build the profile for their animal. You could add forms with various information about the pets.You could allow them to upload pictures (dog owners love nothing more than to take pictures of their animals). Most importantly, you could allow the pets to connect with other pets through a graph.Now let’s talk about bells and whistles. What if a user of your Dogbook was leaving town and wanted to find users in their neighborhood to watch their dog for the weekend. You could implement a geographical filtering and simple messaging or request system in order to help Spot find the best pet sitter. And since no one wants their dog watched by some kind of monster, you could implement reviews to see if people recommend this sitter. There are a million different features you could add!Verified users, so celebrities could show off their dogs. Hafthor Bjornsson, the actor who plays the Mountain on Game ofThrones, has an adorable pomeranian and people demand picture proof! You could implement an adoption system so people can give shelter pets a good home. Of course, adding in all of these features would be beyond the scope of this project, but you should expect this app to have more functionality than the last Capstone
+**1. Database.** Run `backend/schema.sql`, then `backend/seed-quizzes.sql` (33 questions) against your database.
 
-## Guidelines
+**2. API**
 
-1. You can use any technology we’ve taught you in the course, and there’s nothing stopping you from using outside libraries are services.That being said, we recommend you use React, and Node.js for this Capstone.If you completed the optional Redux unit, we recommend you use Redux as well. You can useFlask/Python but will be expected to make a much more fully featured application than last time.
-2. Every step of the project has submissions. This will alert your mentor to evaluate your work. Pay attention to the instructions so you submit the right thing. You will submit the link to your GitHub repo several times, this is for your mentor’s convenience. Your URL on GitHub is static and will not change.
-3. The first two steps require mentor approval to proceed, but after that, you are free to continue working on the project after you submit your work. For instance, you don’t need your mentor to approve your database schema before you start working on your site. Likewise, you don’t need your mentor to approve the first iteration of your site before you start polishing it.
-4. If you get stuck, there is a wealth of resources at your disposal. The course contains all of the material you will need to complete this project, but a well-phrased Google search might yield you an immediate solution to your problem. Don’t forget that your Slack community, TAs, and your mentor there to help you out.
-5.Make sure you use a free API or create your own API and deploy your project on Heroku, so everyone can see your work!
+```bash
+cd backend
+npm install
+cp .env.example .env      # then fill in DATABASE_URL and JWT_SECRET
+npm start                 # http://localhost:5000
+```
+
+Generate a secret with `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
+
+**3. Front end** (from the repository root)
+
+```bash
+npm install
+echo "REACT_APP_API_URL=http://localhost:5000" > .env
+npm start                 # http://localhost:3000
+```
+
+## API reference
+
+Protected routes need an `Authorization: Bearer <token>` header from `/auth/login`.
+
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| POST | `/auth/register` | none | Create an account (`username`, `email`, `password`) |
+| POST | `/auth/login` | none | Log in and receive a JWT |
+| GET | `/auth/profile` | required | Current user's profile |
+| PUT | `/auth/profile` | required | Update display name (`name`) |
+| GET | `/api/quizzes/quizzes` | none | List all trivia questions |
+| POST | `/api/quizzes/quizzes` | required | Add a question (`question`, `options[]`, `correct_answer`, `category`) |
+| PUT | `/api/quizzes/quizzes/:id` | required | Update a question |
+| DELETE | `/api/quizzes/quizzes/:id` | required | Delete a question |
+
+## What I learned
+
+- **Linux is case-sensitive.** A file named `image.js` imported as `Image` worked on my Mac and broke the Vercel build. I now check imports against git's file list, not my disk.
+- **Third-party APIs disappear.** The two APIs I first used for trivia and images shut down. I moved trivia into my own database and seed file, so the core feature no longer depends on someone else's service, and swapped the image source for TheMealDB.
+- **Keep secrets out of git.** I committed a `.env` early on. I moved to a new database and secrets, untracked the file and added `.env.example`.
+- **Free tiers sleep.** I documented the cold start and added loading and retry states so the app doesn't look broken while the API wakes up.
+
+## Roadmap
+
+- An admin role and a UI for managing questions (today, any signed-in user can edit questions through the API).
+- Save quiz scores per user and show them on the profile.
+- Automated tests for the API and the quiz component.
+- Remove the unused legacy `/api/users` routes.
